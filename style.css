@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.range-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 3em;
+  padding: 10px 100px;
+}
+
+.range-slider input {
+  height: 500px;
+  margin-bottom: 10px;
+}
+
+.range-slider span {
+  filter: saturate(attr(data-saturation));
+}
