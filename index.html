@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="libs/p5.js"></script>
   <script src="libs/Tone.min.js"></script>
-  <script src="main.js"></script>
+  <script defer src="main.js"></script>
   <link rel="stylesheet" href="style.css">
   <title>Taudio Example</title>
 </head>
 <body>
   <div class="range-slider fire">
-    <input class="input-range" orient="vertical" type="range" step="0.1" value="0" min="0" max="9">
+    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
     <span class="range-value">🔥</span>
   </div>
   <div class="range-slider earth">
-    <input class="input-range" orient="vertical" type="range" step="0.1" value="0" min="0" max="9">
+    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
     <span class="range-value">⛰</span>
   </div>
-  <div class="range-slider wind">
-    <input class="input-range" orient="vertical" type="range" step="0.1" value="0" min="0" max="9">
+  <div class="range-slider air">
+    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
     <span class="range-value">🌬️</span>
   </div>
   <div class="range-slider water">
-    <input class="input-range" orient="vertical" type="range" step="0.1" value="0" min="0" max="9">
+    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
     <span class="range-value">🌊</span>
   </div>
 </body>

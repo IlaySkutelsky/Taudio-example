@@ -7,7 +7,7 @@ body {
   height: 100vh;
   background-color: #222;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -26,4 +26,9 @@ body {
 
 .range-slider span {
   filter: saturate(attr(data-saturation));
+}
+
+input[type=range]::-webkit-slider-thumb, input[type=range]::-ms-thumb, input[type=range]::-moz-range-thumb  {
+  padding: 1em;
+  cursor: pointer;
 }
