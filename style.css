@@ -4,8 +4,44 @@
 
 body {
   margin: 0;
-  height: 100vh;
+  max-height: 100vh;
   background-color: #222;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.controls-wrapper button {
+  border: none;
+  background: none;
+  color: white;
+  font-size: 2.3em;
+  position: relative;
+  cursor: pointer;
+}
+
+.controls-wrapper button::after {
+  content: "";
+  width: 1.5em;
+  height: 1.3em;
+  border: 1px solid white;
+  display: block;
+  position: absolute;
+  top: 6%;
+  left: 0;
+  border-radius: 5px;
+}
+
+.sliders-wrapper {
+  height: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -20,7 +56,7 @@ body {
 }
 
 .range-slider input {
-  height: 500px;
+  height: 70vh;
   margin-bottom: 10px;
 }
 

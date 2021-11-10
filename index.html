@@ -10,21 +10,26 @@
   <title>Taudio Example</title>
 </head>
 <body>
-  <div class="range-slider fire">
-    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
-    <span class="range-value">🔥</span>
+  <div class="controls-wrapper">
+      <button type="button" name="button" onclick="togglePlay()">‖▶</button>
   </div>
-  <div class="range-slider earth">
-    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
-    <span class="range-value">⛰</span>
-  </div>
-  <div class="range-slider air">
-    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
-    <span class="range-value">🌬️</span>
-  </div>
-  <div class="range-slider water">
-    <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange()">
-    <span class="range-value">🌊</span>
+  <div class="sliders-wrapper">
+    <div class="range-slider fire">
+      <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange(this)">
+      <span class="range-value">🔥</span>
+    </div>
+    <div class="range-slider earth">
+      <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange(this)">
+      <span class="range-value">⛰</span>
+    </div>
+    <div class="range-slider air">
+      <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange(this)">
+      <span class="range-value">🌬️</span>
+    </div>
+    <div class="range-slider water">
+      <input class="input-range" orient="vertical" type="range" step="0.01" value="0" min="0" max="1" onchange="sliderChange(this)">
+      <span class="range-value">🌊</span>
+    </div>
   </div>
 </body>
 </html>

@@ -12,7 +12,7 @@ var kick = new Tone.MembraneSynth({
 
 var kickPart = new Tone.Loop(function(time){
 	kick.triggerAttackRelease('C2', '8n', time+delay);
-}, '2n').start(0);
+}, '2n');
 
 
 /*
@@ -35,23 +35,113 @@ var snare = new Tone.NoiseSynth({
 let delay = 0
 var snarePart = new Tone.Loop(function(time){
 	snare.triggerAttack(time+delay);
-}, '2n').start('4n');
+}, '2n');
 
 
 Tone.Transport.start('+0.1');
 
-function sliderChange() {
-  let fire = +getElementValue("fire")
-  let water = +getElementValue("water")
-  let earth = +getElementValue("earth")
-  let air = +getElementValue("air")
-  let sum = fire+water+earth+air
-  let normalized = sum/4
-  let newBPM = 70+(normalized*70)
-  // console.log(newBPM);
-  Tone.Transport.bpm.rampTo(newBPM, 1)
+let slidersValues = {
+  fire: 0,
+  water: 0,
+  earth: 0,
+  air: 0
 }
 
-function getElementValue(elementName) {
-  return document.querySelector(`.${elementName} input`).value
+let elementalProperties = {
+  fire: {
+    hot: 1,
+    dry: 1,
+    sharp: 1,
+    dense: -1,
+    mobile: 1
+  },
+  water: {
+    hot: -1,
+    dry: -1,
+    sharp: -1,
+    dense: 1,
+    mobile: 1
+  },
+  earth: {
+    hot: -1,
+    dry: 1,
+    sharp: -1,
+    dense: 1,
+    mobile: -1
+  },
+  air: {
+    hot: 1,
+    dry: -1,
+    sharp: -1,
+    dense: -1,
+    mobile: 1
+  }
 }
+
+let calculatedProperties = {
+  hot: 0,
+  dry: 0,
+  sharp: 0,
+  dense: 0,
+  mobile: 0
+}
+
+function sliderChange(elm) {
+  let yesod = elm.parentElement.classList[1]
+  slidersValues[yesod] = +elm.value
+  calculateProperties()
+  adjustBeat()
+}
+
+function calculateProperties() {
+  for (const property in calculatedProperties) {calculatedProperties[property] = 0}
+  for (const [yesod, properties] of Object.entries(elementalProperties)) {
+    for (const [property, value] of Object.entries(properties)) {
+      calculatedProperties[property] += (value*slidersValues[yesod])/4
+    }
+  }
+  for (const property in calculatedProperties) {
+    if (property == 'mobile') calculatedProperties[property] += 0.25
+    else if (property == 'sharp') calculatedProperties[property] += 0.75
+    else calculatedProperties[property] += 0.5
+  }
+}
+
+let lpFilter
+function adjustBeat() {
+  console.log(calculatedProperties);
+  let newBPM = 70+(calculatedProperties['mobile']*70)
+  Tone.Transport.bpm.rampTo(newBPM, 1)
+  // kick.disconnect(lpFilter)
+  // snare.disconnect(lpFilter)
+  // let lpValue = 1200 - calculatedProperties['dry']*800
+  // console.log('lpValue: ' + lpValue);
+  // lpFilter = new Tone.Filter(lpValue, 'lowpass').toDestination();
+  // kick.connect(lpFilter)
+  // snare.connect(lpFilter)
+}
+
+let isPlaying = false;
+async function togglePlay() {
+  if (isPlaying) {
+    kickPart.dispose()
+    snarePart.dispose()
+  } else {
+    kickPart.start('0')
+    snarePart.start('4n')
+  }
+  isPlaying = !isPlaying
+}
+
+function init() {
+  let sliders = document.querySelectorAll('range-slider input')
+  for (let i = 0; i < sliders.length; i++) {
+    let slider = sliders[i]
+    let yesod = slider.parentElement.classList[1]
+    slidersValues[yesod] = +elm.value
+  }
+  calculateProperties()
+  adjustBeat()
+}
+
+init()
