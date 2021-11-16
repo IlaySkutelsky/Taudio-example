@@ -49,11 +49,11 @@ let slidersValues = {
 
 let elementalProperties = {
   fire: {
-    hot: 1,
-    dry: 1,
-    sharp: 1,
-    dense: -1,
-    mobile: 1
+    hot: 1,  //Distortion
+    dry: 1,   //Effect (Reverb?)
+    sharp: 1,  //Attack & Release
+    dense: -1,  //Sounds per byte
+    mobile: 1  // Randomality of steps size
   },
   water: {
     hot: -1,
