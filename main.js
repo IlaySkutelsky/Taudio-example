@@ -115,9 +115,18 @@ let reverb = {name: 'Reverb', driveBy:'dry', options: {preDelay: 0.3, wet:0}}
 let effectsDatas = [dist, reverb]
 let effectsObjs = []
 function adjustBeat() {
-  // console.log(calculatedProperties.dry);
-
+  console.log(calculatedProperties.sharp);
+  
   // --- Synths  ---
+  let sharp = calculatedProperties.sharp
+  let kickAttack = mapRange(sharp, 0, 1, 0.1, 0.02)
+  let kickDecay = mapRange(sharp, 0, 1, 1.2, 0.6)
+  let snareAttack = mapRange(sharp, 0, 1, 0.005, 0.0005)
+  let snareDecay = mapRange(sharp, 0, 1, 0.6, 0.15)
+  synths.kick.envelope.attack = kickAttack
+  synths.kick.envelope.decay = kickDecay
+  synths.snare.envelope.attack = snareAttack
+  synths.snare.envelope.decay = snareDecay
 
   // --- Effects ---
   for (let i = 0; i < effectsObjs.length; i++) {
@@ -161,3 +170,7 @@ function init() {
 }
 
 init()
+
+function mapRange(val, in_min, in_max, out_min, out_max) {
+  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
