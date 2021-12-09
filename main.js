@@ -1,50 +1,53 @@
-/*
- KICK
- */
-var kick = new Tone.MembraneSynth({
-	'envelope' : {
-		'sustain' : 0,
-		'attack' : 0.02,
-		'decay' : 0.8
-	},
-	'octaves' : 10
-}).toMaster();
 
-var kickPart = new Tone.Loop(function(time){
-	kick.triggerAttackRelease('C2', '8n', time+delay);
-}, '2n');
+let synths = {}
+let loops = {}
 
+function createSynthsAndLoop() {
+  // --- KICK ---
+  let kick = new Tone.MembraneSynth({
+    'envelope' : {
+      'sustain' : 0,
+      'attack' : 0.02,
+      'decay' : 0.8
+    },
+    'octaves' : 10
+  }).toMaster();
+  synths.kick = kick
 
-/*
- SNARE
- */
-var snare = new Tone.NoiseSynth({
-	'volume' : -5,
-	'envelope' : {
-		'attack' : 0.001,
-		'decay' : 0.2,
-		'sustain' : 0
-	},
-	'filterEnvelope' : {
-		'attack' : 0.001,
-		'decay' : 0.1,
-		'sustain' : 0
-	}
-}).toMaster();
+  // --- SNARE ---
+  let snare = new Tone.NoiseSynth({
+    'volume' : -5,
+    'envelope' : {
+      'attack' : 0.001,
+      'decay' : 0.2,
+      'sustain' : 0
+    },
+    'filterEnvelope' : {
+      'attack' : 0.001,
+      'decay' : 0.1,
+      'sustain' : 0
+    }
+  }).toMaster();
+  synths.snare = snare
 
-let delay = 0
-var snarePart = new Tone.Loop(function(time){
-	snare.triggerAttack(time+delay);
-}, '2n');
+  let kickPart = new Tone.Loop(function(time){
+    kick.triggerAttackRelease('C2', '8n', time);
+  }, '2n');
+  loops.kick = kickPart
 
+  let snarePart = new Tone.Loop(function(time){
+    snare.triggerAttack(time);
+  }, '2n');
+  loops.snare = snarePart
 
-Tone.Transport.start('+0.1');
+  Tone.Transport.start('+0.1');
+}
 
 let slidersValues = {
   fire: 0,
-  water: 0,
   earth: 0,
-  air: 0
+  air: 0,
+  water: 0
 }
 
 let elementalProperties = {
@@ -107,39 +110,52 @@ function calculateProperties() {
   }
 }
 
-let lpFilter
+let dist = {name: 'Distortion', driveBy:'hot', options: {distortion: 1, wet:0}}
+let reverb = {name: 'Reverb', driveBy:'dry', options: {preDelay: 0.3, wet:0}}
+let effectsDatas = [dist, reverb]
+let effectsObjs = []
 function adjustBeat() {
-  console.log(calculatedProperties);
-  let newBPM = 70+(calculatedProperties['mobile']*70)
-  Tone.Transport.bpm.rampTo(newBPM, 1)
-  // kick.disconnect(lpFilter)
-  // snare.disconnect(lpFilter)
-  // let lpValue = 1200 - calculatedProperties['dry']*800
-  // console.log('lpValue: ' + lpValue);
-  // lpFilter = new Tone.Filter(lpValue, 'lowpass').toDestination();
-  // kick.connect(lpFilter)
-  // snare.connect(lpFilter)
+  // console.log(calculatedProperties.dry);
+
+  // --- Synths  ---
+
+  // --- Effects ---
+  for (let i = 0; i < effectsObjs.length; i++) {
+    effectsObjs[i].dispose()
+  }
+  effectsObjs = []
+
+  for (let i = 0; i < effectsDatas.length; i++) {
+    let effectData = effectsDatas[i]
+    effectData.options.wet = calculatedProperties[effectData.driveBy]
+    let effect = new Tone[effectData.name](effectData.options).toDestination();
+    synths.kick.connect(effect)
+    synths.snare.connect(effect)
+    effectsObjs.push(effect)
+  }
+
 }
 
 let isPlaying = false;
 async function togglePlay() {
   if (isPlaying) {
-    kickPart.dispose()
-    snarePart.dispose()
+    loops.kick.dispose()
+    loops.snare.dispose()
   } else {
-    kickPart.start('0')
-    snarePart.start('4n')
+    loops.kick.start('0')
+    loops.snare.start('4n')
   }
   isPlaying = !isPlaying
 }
 
 function init() {
-  let sliders = document.querySelectorAll('range-slider input')
+  let sliders = document.querySelectorAll('.range-slider input')
   for (let i = 0; i < sliders.length; i++) {
     let slider = sliders[i]
     let yesod = slider.parentElement.classList[1]
-    slidersValues[yesod] = +elm.value
+    slidersValues[yesod] = +slider.value
   }
+  createSynthsAndLoop()
   calculateProperties()
   adjustBeat()
 }
